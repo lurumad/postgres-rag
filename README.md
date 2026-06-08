@@ -59,9 +59,13 @@ docker compose down -v
 
 ## Local documents
 
-Place any files you want n8n to process inside the `documents/` folder at the root of this repo. They are mounted into the n8n container at `/home/node/documents`.
+Place any files you want n8n to process inside the `documents/` folder at the root of this repo. They are mounted into the n8n container at `/home/node/.n8n-files` (the only path n8n allows for file access).
 
-Use that path in n8n nodes that read files (e.g. **Read Binary File**, **Extract from File**).
+Use that path in n8n nodes that read files (e.g. **Read/Write Files from Disk**):
+
+```
+/home/node/.n8n-files/*
+```
 
 ## Stack
 
