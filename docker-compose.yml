@@ -32,6 +32,7 @@ services:
       - "5678:5678"
     volumes:
       - ~/.n8n:/home/node/.n8n
+      - ./documents:/home/node/documents
     environment:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres

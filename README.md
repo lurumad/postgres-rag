@@ -57,6 +57,12 @@ docker compose down -v
    - **Connection → Password**: `n8n_pass`
 4. Click **Save** — you should see the `n8n` database in the left panel.
 
+## Local documents
+
+Place any files you want n8n to process inside the `documents/` folder at the root of this repo. They are mounted into the n8n container at `/home/node/documents`.
+
+Use that path in n8n nodes that read files (e.g. **Read Binary File**, **Extract from File**).
+
 ## Stack
 
 - **pgvector/pgvector:pg16** — Postgres 16 with the `vector` extension for similarity search
