@@ -39,6 +39,7 @@ services:
       - DB_POSTGRESDB_DATABASE=n8n
       - DB_POSTGRESDB_USER=n8n
       - DB_POSTGRESDB_PASSWORD=n8n_pass
+      - N8N_RUNNERS_ENABLED=true
     depends_on:
       - postgres
 
