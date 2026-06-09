@@ -30,7 +30,7 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
       "typeVersion": 1.3,
       "position": [
-        624,
+        832,
         0
       ],
       "id": "b422150f-1b2c-4ef9-9752-1789016dd933",
@@ -49,7 +49,7 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
       "typeVersion": 1,
       "position": [
-        464,
+        672,
         256
       ],
       "id": "5f5666d4-7093-4c7a-ab22-bad0a381e8f0",
@@ -69,7 +69,7 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        736,
+        944,
         256
       ],
       "id": "30808088-100c-4c01-b962-13568474929d",
@@ -87,7 +87,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        976,
+        1184,
         0
       ],
       "id": "46d9cf54-7de8-4c61-8214-94b4d940a0eb",
@@ -106,7 +106,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        416,
+        624,
         0
       ],
       "id": "1e8e5318-9665-4be2-8cdc-f60e6eefb5c1",
@@ -136,11 +136,45 @@
       "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
       "typeVersion": 1,
       "position": [
-        848,
+        1056,
         432
       ],
       "id": "71280999-de1e-4173-bf81-8e77159eb88f",
       "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "394e055f-931f-46f4-aa62-610579bf5b68",
+              "leftValue": "={{ $json.fileName }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "d7e15765-a158-4a1e-94a0-8ba43029756d",
+      "name": "If"
     }
   ],
   "pinData": {},
@@ -204,7 +238,7 @@
       "main": [
         [
           {
-            "node": "Markitdown",
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -221,6 +255,17 @@
           }
         ]
       ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Markitdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -228,7 +273,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "bf3e7635-7553-4c2f-bb23-41339f42c812",
+  "versionId": "ea6ec3cb-1d5e-4f0b-a138-c381c960fff1",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "5f42fbe69ce6577d685067042db6d33274309a16c80d537edbf0ef1e09103dc8"
