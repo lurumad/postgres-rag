@@ -1,0 +1,237 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "7886ea32-356e-4641-85e1-396cfd319f47",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "documents",
+        "embeddingBatchSize": 1024,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        624,
+        0
+      ],
+      "id": "b422150f-1b2c-4ef9-9752-1789016dd933",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "Yzu2onrvRkHleTtH",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "all-minilm:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        464,
+        256
+      ],
+      "id": "5f5666d4-7093-4c7a-ab22-bad0a381e8f0",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "JG9uU1z9M58K8mp9",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        736,
+        256
+      ],
+      "id": "30808088-100c-4c01-b962-13568474929d",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://markitdown:8080/delete",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"path\": \"/documents/{{ $('Read documents').item.json.fileName }}\" }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        976,
+        0
+      ],
+      "id": "46d9cf54-7de8-4c61-8214-94b4d940a0eb",
+      "name": "Clean Files",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://markitdown:8080/convert",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"path\": \"/documents/{{ $('Read documents').item.json.fileName }}\" }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "1e8e5318-9665-4be2-8cdc-f60e6eefb5c1",
+      "name": "Markitdown"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/home/node/.n8n-files/**",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "67f34ebe-1945-40ae-89b6-dae635726dd6",
+      "name": "Read documents"
+    },
+    {
+      "parameters": {
+        "chunkSize": 500,
+        "chunkOverlap": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        816,
+        416
+      ],
+      "id": "fd2a968e-b836-4eca-8c77-2d3aa59007cd",
+      "name": "Character Text Splitter"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store": {
+      "main": [
+        [
+          {
+            "node": "Clean Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markitdown": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read documents": {
+      "main": [
+        [
+          {
+            "node": "Markitdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "34276b59-43c7-43c8-8d91-9cae969f609a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5f42fbe69ce6577d685067042db6d33274309a16c80d537edbf0ef1e09103dc8"
+  },
+  "nodeGroups": [],
+  "id": "piuiacqMko9CgjEf",
+  "tags": []
+}
