@@ -124,21 +124,23 @@
         0
       ],
       "id": "67f34ebe-1945-40ae-89b6-dae635726dd6",
-      "name": "Read documents"
+      "name": "Read documents",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "chunkSize": 500,
-        "chunkOverlap": 50
+        "chunkOverlap": 50,
+        "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.textSplitterCharacterTextSplitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
       "typeVersion": 1,
       "position": [
-        816,
-        416
+        848,
+        432
       ],
-      "id": "fd2a968e-b836-4eca-8c77-2d3aa59007cd",
-      "name": "Character Text Splitter"
+      "id": "71280999-de1e-4173-bf81-8e77159eb88f",
+      "name": "Recursive Character Text Splitter"
     }
   ],
   "pinData": {},
@@ -209,7 +211,7 @@
         ]
       ]
     },
-    "Character Text Splitter": {
+    "Recursive Character Text Splitter": {
       "ai_textSplitter": [
         [
           {
@@ -221,12 +223,12 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "34276b59-43c7-43c8-8d91-9cae969f609a",
+  "versionId": "bf3e7635-7553-4c2f-bb23-41339f42c812",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "5f42fbe69ce6577d685067042db6d33274309a16c80d537edbf0ef1e09103dc8"

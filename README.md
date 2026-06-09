@@ -100,7 +100,7 @@ The file `embbedings-workflow.json` is a ready-to-import n8n workflow that autom
 
 1. Open n8n at http://localhost:5678
 2. Go to **Workflows → Import from file**
-3. Select `embbedings-workflow.json`
+3. Select `embbeddings-workflow.json`
 
 ## MarkItDown (document conversion)
 
