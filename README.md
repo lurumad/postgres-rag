@@ -1,6 +1,6 @@
 # postgres-rag
 
-Local stack for RAG workflows using PostgreSQL + pgvector, n8n, and pgAdmin.
+Local stack for RAG workflows using PostgreSQL + pgvector, n8n, pgAdmin, and Ollama.
 
 ## Services
 
@@ -9,6 +9,7 @@ Local stack for RAG workflows using PostgreSQL + pgvector, n8n, and pgAdmin.
 | n8n      | http://localhost:5678      | Set on first run                     |
 | pgAdmin  | http://localhost:5050      | `admin@admin.com` / `admin`          |
 | Postgres | `localhost:5432` (internal)| user: `n8n` / password: `n8n_pass`   |
+| Ollama   | http://localhost:11434     | No auth                              |
 
 ## Databases
 
@@ -22,9 +23,9 @@ Local stack for RAG workflows using PostgreSQL + pgvector, n8n, and pgAdmin.
 ```sql
 documents (
   id        SERIAL PRIMARY KEY,
-  content   TEXT,
+  text      TEXT,
   metadata  JSONB,
-  embedding VECTOR(1536)   -- IVFFlat cosine index
+  embedding VECTOR(384)    -- IVFFlat cosine index (all-minilm dimensions)
 )
 ```
 
@@ -67,8 +68,24 @@ Use that path in n8n nodes that read files (e.g. **Read/Write Files from Disk**)
 /home/node/.n8n-files/*
 ```
 
+## Ollama (local embeddings)
+
+Ollama runs locally and serves the `all-minilm` model for generating 384-dimension embeddings without any external API calls. On first start, `ollama-pull` automatically pulls the model.
+
+```bash
+# Check available models
+curl http://localhost:11434/api/tags
+
+# Generate an embedding manually
+curl http://localhost:11434/api/embeddings \
+  -d '{"model":"all-minilm","prompt":"your text here"}'
+```
+
+To use a GPU (NVIDIA), uncomment the `deploy` block in `docker-compose.yml` under the `ollama` service.
+
 ## Stack
 
 - **pgvector/pgvector:pg16** — Postgres 16 with the `vector` extension for similarity search
 - **n8nio/n8n** — workflow automation connected to Postgres
 - **dpage/pgadmin4** — database GUI
+- **ollama/ollama** — local LLM server running `all-minilm` for embeddings
