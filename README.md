@@ -1,6 +1,6 @@
 # postgres-rag
 
-Local stack for RAG workflows using PostgreSQL + pgvector, n8n, pgAdmin, and Ollama.
+Local stack for RAG workflows using PostgreSQL + pgvector, n8n, pgAdmin, Ollama, and MarkItDown.
 
 ## Services
 
@@ -10,6 +10,7 @@ Local stack for RAG workflows using PostgreSQL + pgvector, n8n, pgAdmin, and Oll
 | pgAdmin  | http://localhost:5050      | `admin@admin.com` / `admin`          |
 | Postgres | `localhost:5432` (internal)| user: `n8n` / password: `n8n_pass`   |
 | Ollama   | http://localhost:11434     | No auth                              |
+| MarkItDown | http://localhost:8080    | No auth                              |
 
 ## Databases
 
@@ -83,9 +84,33 @@ curl http://localhost:11434/api/embeddings \
 
 To use a GPU (NVIDIA), uncomment the `deploy` block in `docker-compose.yml` under the `ollama` service.
 
+## MarkItDown (document conversion)
+
+MarkItDown converts documents (PDF, DOCX, XLSX, images, etc.) to Markdown via a simple HTTP API. Files in `documents/` are mounted at `/documents` inside the container.
+
+```bash
+# Convert a file by path (must be inside /documents)
+curl -X POST http://localhost:8080/convert \
+  -H "Content-Type: application/json" \
+  -d '{"path":"/documents/example.txt"}'
+
+# Convert by uploading a file directly
+curl -X POST http://localhost:8080/convert \
+  -F "file=@/path/to/local/file.pdf"
+
+# Health check
+curl http://localhost:8080/health
+
+# Delete a file
+curl -X POST http://localhost:8080/delete \
+  -H "Content-Type: application/json" \
+  -d '{"path":"/documents/example.txt"}'
+```
+
 ## Stack
 
 - **pgvector/pgvector:pg16** — Postgres 16 with the `vector` extension for similarity search
 - **n8nio/n8n** — workflow automation connected to Postgres
 - **dpage/pgadmin4** — database GUI
 - **ollama/ollama** — local LLM server running `all-minilm` for embeddings
+- **python:3.12-slim + markitdown** — document-to-Markdown conversion service
