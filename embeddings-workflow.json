@@ -49,8 +49,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
       "typeVersion": 1,
       "position": [
-        672,
-        256
+        832,
+        656
       ],
       "id": "5f5666d4-7093-4c7a-ab22-bad0a381e8f0",
       "name": "Embeddings Ollama",
@@ -69,8 +69,8 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        944,
-        256
+        928,
+        224
       ],
       "id": "30808088-100c-4c01-b962-13568474929d",
       "name": "Default Data Loader"
@@ -137,7 +137,7 @@
       "typeVersion": 1,
       "position": [
         1056,
-        432
+        400
       ],
       "id": "71280999-de1e-4173-bf81-8e77159eb88f",
       "name": "Recursive Character Text Splitter"
@@ -175,6 +175,78 @@
       ],
       "id": "d7e15765-a158-4a1e-94a0-8ba43029756d",
       "name": "Has Files"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        1680,
+        16
+      ],
+      "id": "ff8ed762-dd5c-4c64-8dbc-9bbdb9ecb333",
+      "name": "When chat message received",
+      "webhookId": "bd34a00a-78ba-49c3-babe-cfd368d4c0bb"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1888,
+        16
+      ],
+      "id": "895b103a-8194-4486-8c7f-bd31694fe13c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:1b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        1824,
+        288
+      ],
+      "id": "6a4e7ab0-073d-4434-bbd0-c8151bfe12c5",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "JG9uU1z9M58K8mp9",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Read documents from Postgres Vector",
+        "tableName": "documents",
+        "topK": 10,
+        "options": {
+          "distanceStrategy": "cosine"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        2016,
+        288
+      ],
+      "id": "d9e88378-e9f4-4bfa-8d2c-51259b4ca9e3",
+      "name": "Postgres PGVector Retrieval",
+      "credentials": {
+        "postgres": {
+          "id": "Yzu2onrvRkHleTtH",
+          "name": "Postgres account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -195,6 +267,11 @@
         [
           {
             "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Postgres PGVector Retrieval",
             "type": "ai_embedding",
             "index": 0
           }
@@ -266,6 +343,39 @@
           }
         ]
       ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Retrieval": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -273,7 +383,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "2f33dc1f-6084-449a-9006-dbcddb2cbe94",
+  "versionId": "ec0ff0ef-572a-4ca1-955a-53b357f44a15",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "5f42fbe69ce6577d685067042db6d33274309a16c80d537edbf0ef1e09103dc8"
