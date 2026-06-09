@@ -84,6 +84,24 @@ curl http://localhost:11434/api/embeddings \
 
 To use a GPU (NVIDIA), uncomment the `deploy` block in `docker-compose.yml` under the `ollama` service.
 
+## n8n Embeddings Workflow
+
+The file `embbedings-workflow.json` is a ready-to-import n8n workflow that automates the full RAG ingestion pipeline:
+
+1. **Schedule Trigger** — runs on a schedule
+2. **Read documents** — reads files from `/home/node/.n8n-files`
+3. **MarkItDown** — converts each document to Markdown via the MarkItDown service
+4. **Character Text Splitter** — splits content into chunks
+5. **Embeddings Ollama** — generates 384-dimension embeddings using `all-minilm`
+6. **Postgres PGVector Store** — stores chunks + embeddings in the `documents` table
+7. **Clean Files** — deletes processed files via the MarkItDown `/delete` endpoint
+
+### Import the workflow
+
+1. Open n8n at http://localhost:5678
+2. Go to **Workflows → Import from file**
+3. Select `embbedings-workflow.json`
+
 ## MarkItDown (document conversion)
 
 MarkItDown converts documents (PDF, DOCX, XLSX, images, etc.) to Markdown via a simple HTTP API. Files in `documents/` are mounted at `/documents` inside the container.
