@@ -86,7 +86,7 @@ To use a GPU (NVIDIA), uncomment the `deploy` block in `docker-compose.yml` unde
 
 ## n8n Embeddings Workflow
 
-The file `embbedings-workflow.json` is a ready-to-import n8n workflow that automates the full RAG ingestion pipeline:
+The file `embeddings-workflow.json` is a ready-to-import n8n workflow that automates the full RAG ingestion pipeline:
 
 1. **Schedule Trigger** — runs on a schedule
 2. **Read documents** — reads files from `/home/node/.n8n-files`
@@ -100,7 +100,24 @@ The file `embbedings-workflow.json` is a ready-to-import n8n workflow that autom
 
 1. Open n8n at http://localhost:5678
 2. Go to **Workflows → Import from file**
-3. Select `embbeddings-workflow.json`
+3. Select `embeddings-workflow.json`
+
+## n8n Chat Workflow
+
+A chat workflow triggers on incoming messages and routes them through an **AI Agent** backed by an **Ollama Chat Model** (local LLM). The agent can be extended with Memory and Tool nodes for RAG retrieval.
+
+Pipeline:
+
+1. **When chat message received** — entry point for chat input
+2. **AI Agent** — orchestrates the response using Chat Model, Memory, and Tools
+3. **Ollama Chat Model** — local LLM served by Ollama (no external API calls)
+
+### Import the workflow
+
+1. Open n8n at http://localhost:5678
+2. Go to **Workflows → Import from file**
+3. Select the chat workflow JSON file
+4. In the **Ollama Chat Model** node, set the Ollama base URL to `http://ollama:11434` and pick your model
 
 ## MarkItDown (document conversion)
 
