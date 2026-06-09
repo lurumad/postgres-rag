@@ -43,6 +43,32 @@ services:
     depends_on:
       - postgres
 
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # GPU NVIDIA — descomenta si tienes una:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  ollama-pull:
+    image: ollama/ollama:latest
+    entrypoint: /bin/sh -c "sleep 5 && ollama pull all-minilm"
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    depends_on:
+      - ollama
+    restart: "no"
+
 volumes:
   postgres_data:
   pgadmin_data:
+  ollama_data:
